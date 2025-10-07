@@ -51,44 +51,6 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Configurações do GitHub
-# Lê das secrets do Streamlit Cloud ou variáveis de ambiente
-try:
-    # Tenta ler do Streamlit Secrets (quando hospedado no Streamlit Cloud)
-    GITHUB_TOKEN = st.secrets["GITHUB_TOKEN"]
-    GITHUB_REPO = st.secrets["GITHUB_REPO"]
-    GITHUB_FILE = st.secrets["GITHUB_FILE"]
-except:
-    # Fallback para variáveis de ambiente locais (desenvolvimento)
-    from dotenv import load_dotenv
-    load_dotenv()
-    
-    GITHUB_TOKEN = os.getenv("GITHUB_TOKEN", "")
-    GITHUB_REPO = os.getenv("GITHUB_REPO", "")
-    GITHUB_FILE = os.getenv("GITHUB_FILE", "leaderboard.json")
-    
-    # Aviso se as credenciais não estiverem configuradas
-    if not GITHUB_TOKEN or not GITHUB_REPO:
-        st.error("⚠️ Configure as variáveis GITHUB_TOKEN e GITHUB_REPO no arquivo .env ou nas Secrets do Streamlit Cloud")
-
-# Credenciais de admin
-# Lê das secrets do Streamlit Cloud ou variáveis de ambiente
-try:
-    # Tenta ler do Streamlit Secrets
-    ADMIN_CREDENTIALS = dict(st.secrets.get("ADMINS", {}))
-except:
-    # Fallback para variáveis de ambiente ou hardcoded (desenvolvimento)
-    admin1_user = os.getenv("ADMIN1_USER", "admin")
-    admin1_pass = os.getenv("ADMIN1_PASS", "secomp2024")
-    admin2_user = os.getenv("ADMIN2_USER", "organizador")
-    admin2_pass = os.getenv("ADMIN2_PASS", "jogos123")
-    
-    ADMIN_CREDENTIALS = {
-        admin1_user: admin1_pass,
-        admin2_user: admin2_pass
-    }
-
-
 
 # Inicialização do session state
 if 'logged_in' not in st.session_state:

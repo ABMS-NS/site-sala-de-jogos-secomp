@@ -2,29 +2,10 @@ import streamlit as st
 import requests
 import json
 import base64
-import os
 from datetime import datetime
 
-
-# Configurações do GitHub
-# Lê das secrets do Streamlit Cloud ou variáveis de ambiente
-try:
-    # Tenta ler do Streamlit Secrets (quando hospedado no Streamlit Cloud)
-    GITHUB_TOKEN = st.secrets["GITHUB_TOKEN"]
-    GITHUB_REPO = st.secrets["GITHUB_REPO"]
-    GITHUB_FILE = st.secrets["GITHUB_FILE"]
-except:
-    # Fallback para variáveis de ambiente locais (desenvolvimento)
-    from dotenv import load_dotenv
-    load_dotenv()
-    
-    GITHUB_TOKEN = os.getenv("GITHUB_TOKEN", "")
-    GITHUB_REPO = os.getenv("GITHUB_REPO", "")
-    GITHUB_FILE = os.getenv("GITHUB_FILE", "leaderboard.json")
-    
-    # Aviso se as credenciais não estiverem configuradas
-    if not GITHUB_TOKEN or not GITHUB_REPO:
-        st.error("⚠️ Configure as variáveis GITHUB_TOKEN e GITHUB_REPO no arquivo .env ou nas Secrets do Streamlit Cloud")
+# Importar configurações do arquivo config.py
+from config import GITHUB_TOKEN, GITHUB_REPO, GITHUB_FILE
 
 
 def get_github_data():
@@ -45,13 +26,15 @@ def get_github_data():
             decoded_content = base64.b64decode(content['content']).decode('utf-8')
             return json.loads(decoded_content), content['sha']
         elif response.status_code == 404:
+            st.warning("⚠️ Arquivo leaderboard.json não encontrado no GitHub. Será criado ao salvar dados.")
             return {"players": {}}, None
         else:
-            st.error(f"Erro ao buscar dados: {response.status_code}")
+            st.error(f"❌ Erro ao buscar dados: {response.status_code}")
             return {"players": {}}, None
     except Exception as e:
-        st.error(f"Erro na conexão: {str(e)}")
+        st.error(f"❌ Erro na conexão com GitHub: {str(e)}")
         return {"players": {}}, None
+
 
 def save_github_data(data, sha=None):
     """Salva dados no arquivo JSON do GitHub"""
@@ -80,8 +63,8 @@ def save_github_data(data, sha=None):
         if response.status_code in [200, 201]:
             return True
         else:
-            st.error(f"Erro ao salvar: {response.status_code} - {response.text}")
+            st.error(f"❌ Erro ao salvar: {response.status_code} - {response.text}")
             return False
     except Exception as e:
-        st.error(f"Erro ao salvar: {str(e)}")
+        st.error(f"❌ Erro ao salvar: {str(e)}")
         return False
