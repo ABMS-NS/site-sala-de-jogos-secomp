@@ -8,10 +8,8 @@ def home_page():
     st.markdown("---")
     
     # Botão de refresh
-    col_refresh1, col_refresh2, col_refresh3 = st.columns([4, 1, 1])
-    with col_refresh2:
-        if st.button("🔄 Atualizar", use_container_width=True):
-            st.rerun()
+    if st.button("🔄 Atualizar", use_container_width=True):
+        st.rerun()
     
     # Carregar dados do GitHub
     with st.spinner("Carregando ranking..."):
