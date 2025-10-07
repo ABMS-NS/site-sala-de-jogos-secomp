@@ -6,7 +6,7 @@ import os
 from datetime import datetime
 
 from aux.go_to import go_to_home, go_to_login, go_to_admin # Funções de navegação postas aqui agora
-from aux.github_utils import get_github_data, save_github_data # Funções de interação com GitHub
+from aux.git_api import get_github_data, save_github_data # Funções de interação com GitHub
 
 # Configuração da página em modo escuro
 st.set_page_config(
