@@ -11,6 +11,9 @@ from views.home import home_page # Página inicial (leaderboard)
 from views.pagina_login import login_page # Página de login
 from views.admin_page import admin_page # Página de administração
 
+import os
+os.environ["STREAMLIT_WATCHDOG_ENABLED"] = "false"
+
 # Configuração da página em modo escuro
 st.set_page_config(
     page_title="SECOMP - Sala de Jogos Leaderboard",
@@ -66,4 +69,5 @@ if st.session_state.current_page == 'home':
 elif st.session_state.current_page == 'login':
     login_page()
 elif st.session_state.current_page == 'admin':
+
     admin_page()
